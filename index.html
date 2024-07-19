@@ -4,8 +4,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Edgehill Greens Livestock Auctions</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edgehill Greens ADMIN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="description" content="Join the Edgehill Greens Livestock Auction to bid on premium livestock.">
   <meta name="keywords" content="livestock, auction, bidding, cattle, sheep, Edgehill Greens">
   <meta name="author" content="Edgehill Greens">
@@ -285,6 +285,24 @@ text-align: center;
       transform: scale(1.2);
     }
 
+        .spinner-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3333;
+        }
+
+.spinner {
+    font-size: 6rem;
+    color: #3498db;
+}
+
   </style>
 </head>
 <body>
@@ -334,30 +352,107 @@ text-align: center;
   <button id="submitButton" type="submit">SUBMIT</button>
 </div>
 
-
+    <div class="spinner-container" id="spinner">
+        <i class="fas fa-spinner fa-spin spinner"></i>
 
   <script>
-
+//TODO
 //on SUBMIT
-//check required and block special characters, also restrict input size
+//check required and block special characters in video title, also restrict input size
+//upload video
 
-//getCurrentTimestamp()-minutes and seconds
+        function showSpinner() {
+            document.getElementById('spinner').style.display = 'flex';
+        }
 
-//const fileName = @31#2-tooth, really good condition.%20240729193112 Merino Sheep&202405051432Greg$1111^0734543221
+        function hideSpinner() {
+            document.getElementById('spinner').style.display = 'none';
+        }
 
-//@{productVideo}
-//#{productDescription}
-//%{getCurrentTimestamp}{productDescription}
-//&{202405051432MILTONGREEN}
-//${startingPrice}
-//^{0734543221}
 
-//createFile(repo, fileName, content, moo);
-//const repo = 'EDGEHILLGREENS/llll';
+
+const repo = 'EDGEHILLGREENS/llll';
+const merpmerp = 'Z2hwX2Q0Q';
+const gloopdoop = 'zdSSVFhSzNZ';
+const dloogdloog = 'MXNhUnlxSzIz';
+const herpherp = gloopdoop + dloogdloog;
+const derpderp = 'UEg3clN0Q2hkeDNsSGIwSw==';
+const joojooo = merpmerp + herpherp + derpderp;
+
+
+document.getElementById('submitButton').addEventListener('click', function(event) {
+    event.preventDefault();
+
+    const productTitle = document.getElementById('productTitle').value;
+    const productDescription = document.getElementById('productDescription').value;
+    const startingPrice = document.getElementById('startingPrice').value;
+    const productVideo = document.getElementById('productVideo').files[0];
+
+    const specialCharRegex = /[!@#$%^&*()?":{}|<>]/g;
+
+    function containsSpecialCharacters(str) {
+        return specialCharRegex.test(str);
+    }
+
+    if (productTitle && productDescription && startingPrice && productVideo) {
+        if (containsSpecialCharacters(productTitle) || containsSpecialCharacters(productDescription) || containsSpecialCharacters(startingPrice)) {
+            alert('Special characters are not allowed.');
+            return;
+        }
+        if (containsSpecialCharacters(productVideo.name)) {
+            alert('Special characters are not allowed in the video filename.');
+            return;
+        }
+
+        const moo = atob(joojooo);
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const videoContent = event.target.result.split(',')[1];
+            const currentTimestamp = getCurrentTimestamp().substring(0, 12);
+            const expiryTimestamp = addHoursToTimestamp(currentTimestamp, 48);
+            const newFileName = `@${productVideo.name}^${productDescription}!${expiryTimestamp}${productTitle}$${startingPrice}`;
+            console.log(newFileName);
+            showSpinner();
+            createFile(repo, newFileName, videoContent, moo)
+                .then(data => {
+                    console.log('File created successfully:', data);
+                    hideProductForm();
+                    RefreshList();
+        hideSpinner();
+                })
+                .catch(error => {
+                    console.error('Error creating file:', error);
+                });
+        };
+        reader.readAsDataURL(productVideo);
+    } else {
+        alert('Please fill in all fields and select a video.');
+    }
+});
+
+function addHoursToTimestamp(timestamp, hoursToAdd) {
+    const year = parseInt(timestamp.substring(0, 4), 10);
+    const month = parseInt(timestamp.substring(4, 6), 10) - 1;
+    const day = parseInt(timestamp.substring(6, 8), 10);
+    const hour = parseInt(timestamp.substring(8, 10), 10);
+    const minute = parseInt(timestamp.substring(10, 12), 10);
+    
+    const date = new Date(year, month, day, hour, minute);
+    date.setHours(date.getHours() + hoursToAdd);
+    
+    const newYear = date.getFullYear();
+    const newMonth = String(date.getMonth() + 1).padStart(2, '0');
+    const newDay = String(date.getDate()).padStart(2, '0');
+    const newHour = String(date.getHours()).padStart(2, '0');
+    const newMinute = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${newYear}${newMonth}${newDay}${newHour}${newMinute}`;
+}
 
 function RefreshList() {
-//reload page
+    location.reload();
 }
+
 
 function hideProductForm() {
   overlay.style.display = 'none';
@@ -373,12 +468,7 @@ function AddProduct() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-        const merpmerp = 'Z2hwX2Q0Q';
-                const gloopdoop = 'zdSSVFhSzNZ';
-                    const dloogdloog = 'MXNhUnlxSzIz';
-                            const herpherp = gloopdoop + dloogdloog;
-                                    const derpderp = 'UEg3clN0Q2hkeDNsSGIwSw==';
-                                            const joojooo = merpmerp + herpherp + derpderp;
+
                                                     const moo = atob(joojooo);
                                                         const repo = 'EDGEHILLGREENS/llll';
                                                                 const repo2 = 'EDGEHILLGREENS/ll';
@@ -396,15 +486,13 @@ document.addEventListener('DOMContentLoaded', () => {
       data.forEach(file => {
         if (file.name.startsWith(prefix)) {
           const fileName = file.name;
-          const parts = fileName.split(/[@#%&$^]+/);
+          const parts = fileName.split(/[@^!&$]+/);
 
           const videoName = parts[1].trim();
           const productDescription = parts[2].trim();
           const productTitle = parts[3].trim().substring(12);
           const productID = parts[3].trim();
-          const userID = parts[4].trim();
-          const contactDetails = parts[6].trim();
-          const currentPrice = parseFloat(parts[5]);
+          const currentPrice = parseFloat(parts[4]);
           const expiryDateString = parts[3].trim().substring(0, 12);      
           const year = parseInt(expiryDateString.substring(0, 4));
           const month = parseInt(expiryDateString.substring(4, 6)) - 1;
@@ -422,7 +510,19 @@ document.addEventListener('DOMContentLoaded', () => {
             </span>
             <i class="fas fa-sync-alt refresh-icon"></i>
             <video class="product-video" controls>
-            <source src="${videoName}.mp4" type="video/mp4">
+<video controls>
+    <source src="${videoName}" type="video/mp4">
+    <source src="${videoName}" type="video/webm">
+    <source src="${videoName}" type="video/ogg">
+    <source src="${videoName}" type="video/x-msvideo">
+    <source src="${videoName}" type="video/quicktime">
+    <source src="${videoName}" type="video/x-matroska">
+    <source src="${videoName}" type="video/x-flv">
+    <source src="${videoName}" type="video/3gpp">
+    <source src="${videoName}" type="video/mpeg">
+    Your browser does not support the video tag.
+</video>
+
             Your browser does not support the video tag.
             </video>
             <div class="product-info">
@@ -432,8 +532,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </form>
               <p class="countdown"></p>
               <p class="product-id" style="display: none;">${productID}</p>
-              <p class="user-id" style="display: none;">${userID}</p>
-              <p class="contact-details" style="display: none;">${contactDetails}</p>
             </div>
           `;
 
@@ -535,9 +633,6 @@ function refreshPrice(productID, moo, repo2, productCard) {
       const priceElement = productCard.querySelector('.product-price');
       priceElement.textContent = `Current Price: R${highestBid}`;
       priceElement.setAttribute('data-current-price', highestBid);
-
-      const bidInput = productCard.querySelector('.bid-input');
-      bidInput.setAttribute('min', highestBid + 100);
     }
   })
   .catch(error => {
