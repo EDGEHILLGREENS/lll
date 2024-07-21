@@ -69,7 +69,7 @@ body {
       z-index: 1003;
       opacity: 0.3;
       transition: 0.3s ease;
-padding: 10px;
+      padding: 10px;
 }
 
 .product-card .favorite:hover {
@@ -87,7 +87,7 @@ padding: 10px;
   z-index: 1003;
   opacity: 0.4;
   transition: 0.3s ease;
-padding: 15px;
+  padding: 15px;
 }
 
 .product-card .refresh-icon:hover {
@@ -118,7 +118,11 @@ padding: 15px;
       width: 100%;
       height: 200px;
       object-fit: cover;
+      background-color: #000;
     }
+
+.video-container {
+}
 
     .product-info {
       padding: 15px;
@@ -167,11 +171,11 @@ footer {
       z-index: 2000;
     }
 
-    #AddProduct {
+#AddProduct {
       width: 88px;
       height: 88px;
       background-color: green;
-      border-radius: 50%;
+      border-radius: 18px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -182,13 +186,13 @@ footer {
       color: white;
       font-weight: bold;
       transition: 0.3s;
-    opacity: 0.6;
+      opacity: 0.6;
     }
 
     #AddProduct:hover {
       background-color: green;
       transform: scale(1.1);
-    opacity: 0.7;
+      opacity: 0.7;
     }
 
     #AddProduct i {
@@ -226,15 +230,16 @@ footer {
 #productForm input[type="text"],
 #productForm textarea,
 #productForm input[type="file"],
+#productForm input[type="url"],
 #productForm button {
-  width: calc(100% - 20px);
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 18px;
-  margin-bottom: 12px;
-  box-sizing: border-box;
-text-align: center;
+      width: calc(100% - 20px);
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 18px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      text-align: center;
 }
 
 #productForm button {
@@ -255,25 +260,23 @@ text-align: center;
     #RefreshList {
       width: 88px;
       height: 88px;
-      background-color: green;
+      background-color: transparent;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       margin: 0 auto;
-      box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4);
       cursor: pointer;
       font-size: 48px;
-      color: white;
+      color: green;
       font-weight: bold;
       transition: 0.3s;
-    opacity: 0.6;
+      opacity: 0.6;
     }
 
     #RefreshList:hover {
-      background-color: green;
       transform: scale(1.1);
-    opacity: 0.7;
+      opacity: 0.7;
     }
 
     #RefreshList i {
@@ -281,11 +284,11 @@ text-align: center;
     }
 
     #RefreshList:hover i {
-  animation: rotateIcon 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+      animation: rotateIcon 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
       transform: scale(1.2);
     }
 
-        .spinner-container {
+.spinner-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -335,6 +338,7 @@ text-align: center;
   
 <div id="overlay" onclick="hideProductForm()"></div>
 
+
 <div id="productForm" style="display: none;">
   <label for="productTitle">Product Title:</label>
   <input type="text" id="productTitle" name="productTitle" required><br>
@@ -345,8 +349,12 @@ text-align: center;
   <label for="startingPrice">Starting Price:</label>
   <input type="text" id="startingPrice" name="startingPrice" required><br>
 
-  <label for="productVideo">Product Video:</label>
-  <input type="file" id="productVideo" name="productVideo" required>
+  <label for="productVideo">Product Video URL:</label>
+  <input type="url" id="productVideo" name="productVideo" required>
+  <br><br>
+  <a href="https://streamable.com/" target="_blank" style="display: inline-block; padding: 0px; border-radius: 22px; overflow: hidden; width: 60%; height: 44px;">
+    <img src="streamable.png" alt="Streamable" style="display: block; width: 100%; height: 100%; object-fit: cover;">
+  </a>
   <br><br>
 
   <button id="submitButton" type="submit">SUBMIT</button>
@@ -356,20 +364,6 @@ text-align: center;
         <i class="fas fa-spinner fa-spin spinner"></i>
 
   <script>
-//TODO
-//on SUBMIT
-//check required and block special characters in video title, also restrict input size
-//upload video
-
-        function showSpinner() {
-            document.getElementById('spinner').style.display = 'flex';
-        }
-
-        function hideSpinner() {
-            document.getElementById('spinner').style.display = 'none';
-        }
-
-
 
 const repo = 'EDGEHILLGREENS/llll';
 const merpmerp = 'Z2hwX2Q0Q';
@@ -379,14 +373,13 @@ const herpherp = gloopdoop + dloogdloog;
 const derpderp = 'UEg3clN0Q2hkeDNsSGIwSw==';
 const joojooo = merpmerp + herpherp + derpderp;
 
-
 document.getElementById('submitButton').addEventListener('click', function(event) {
     event.preventDefault();
 
     const productTitle = document.getElementById('productTitle').value;
     const productDescription = document.getElementById('productDescription').value;
     const startingPrice = document.getElementById('startingPrice').value;
-    const productVideo = document.getElementById('productVideo').files[0];
+    const productVideoUrl = document.getElementById('productVideo').value;
 
     const specialCharRegex = /[!@#$%^&*()?":{}|<>]/g;
 
@@ -394,41 +387,75 @@ document.getElementById('submitButton').addEventListener('click', function(event
         return specialCharRegex.test(str);
     }
 
-    if (productTitle && productDescription && startingPrice && productVideo) {
+    if (productTitle && productDescription && startingPrice && productVideoUrl) {
         if (containsSpecialCharacters(productTitle) || containsSpecialCharacters(productDescription) || containsSpecialCharacters(startingPrice)) {
             alert('Special characters are not allowed.');
             return;
         }
-        if (containsSpecialCharacters(productVideo.name)) {
-            alert('Special characters are not allowed in the video filename.');
+
+        try {
+            new URL(productVideoUrl);
+        } catch (_) {
+            alert('Please enter a valid URL.');
             return;
         }
 
-        const moo = atob(joojooo);
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const videoContent = event.target.result.split(',')[1];
+            const moo = atob(joojooo);
             const currentTimestamp = getCurrentTimestamp().substring(0, 12);
             const expiryTimestamp = addHoursToTimestamp(currentTimestamp, 48);
-            const newFileName = `@${productVideo.name}^${productDescription}!${expiryTimestamp}${productTitle}$${startingPrice}`;
-            console.log(newFileName);
-            showSpinner();
-            createFile(repo, newFileName, videoContent, moo)
-                .then(data => {
-                    console.log('File created successfully:', data);
-                    hideProductForm();
-                    RefreshList();
-        hideSpinner();
-                })
-                .catch(error => {
-                    console.error('Error creating file:', error);
-                });
-        };
-        reader.readAsDataURL(productVideo);
+            const encodedVideoUrl = encodeURIComponent(productVideoUrl);
+            const encodedVideoUrl2 = encodedVideoUrl.replace(/%/g, '[');
+            const newFileName = `@${encodedVideoUrl2}^${productDescription}!${expiryTimestamp}${productTitle}$${startingPrice}`;
+
+           console.log('Generated file name:', newFileName);
+
+           showSpinner();
+
+        createFile(repo, newFileName, '', moo)
+            .then(() => {
+                console.log('File created successfully');
+            })
+            .catch(error => {
+                console.error('Error uploading file:', error);
+                alert('Upload failed');
+            })
+            .finally(() => {
+                hideSpinner();
+                hideProductForm();
+            });
     } else {
-        alert('Please fill in all fields and select a video.');
+        alert('Please fill in all fields and provide a video URL.');
     }
 });
+
+function showSpinner() {
+            document.getElementById('spinner').style.display = 'flex';
+        }
+function hideSpinner() {
+            document.getElementById('spinner').style.display = 'none';
+        }
+
+function createFile(repo, fileName, content, moo) {
+  const apiUrl = `https://api.github.com/repos/${repo}/contents/${fileName}`;
+
+  return fetch(apiUrl, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${moo}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: `Create file ${fileName}`,
+      content: btoa(content)
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.json();
+  });
+}
 
 function addHoursToTimestamp(timestamp, hoursToAdd) {
     const year = parseInt(timestamp.substring(0, 4), 10);
@@ -450,9 +477,10 @@ function addHoursToTimestamp(timestamp, hoursToAdd) {
 }
 
 function RefreshList() {
-    location.reload();
+    setTimeout(() => {
+        location.reload();
+    }, 2222);
 }
-
 
 function hideProductForm() {
   overlay.style.display = 'none';
@@ -486,9 +514,13 @@ document.addEventListener('DOMContentLoaded', () => {
       data.forEach(file => {
         if (file.name.startsWith(prefix)) {
           const fileName = file.name;
-          const parts = fileName.split(/[@^!&$]+/);
+          const parts = fileName.split(/[@^!$]+/);
 
           const videoName = parts[1].trim();
+          const decodedVideoName2 = videoName.replace(/\[/g, '%');
+          const decodedVideoName = decodeURIComponent(decodedVideoName2);
+          const regex = /^(https:\/\/streamable.com\/)([a-zA-Z0-9]+)$/;
+          const decodedVideoName3 = decodedVideoName.replace(regex, '$1e/$2?');
           const productDescription = parts[2].trim();
           const productTitle = parts[3].trim().substring(12);
           const productID = parts[3].trim();
@@ -509,26 +541,15 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="fa fa-star"></i>
             </span>
             <i class="fas fa-sync-alt refresh-icon"></i>
-            <video class="product-video" controls>
-<video controls>
-    <source src="${videoName}" type="video/mp4">
-    <source src="${videoName}" type="video/webm">
-    <source src="${videoName}" type="video/ogg">
-    <source src="${videoName}" type="video/x-msvideo">
-    <source src="${videoName}" type="video/quicktime">
-    <source src="${videoName}" type="video/x-matroska">
-    <source src="${videoName}" type="video/x-flv">
-    <source src="${videoName}" type="video/3gpp">
-    <source src="${videoName}" type="video/mpeg">
-    Your browser does not support the video tag.
-</video>
-
-            Your browser does not support the video tag.
-            </video>
-            <div class="product-info">
+    <iframe class="product-video" src="${decodedVideoName3}" frameborder="0" allowfullscreen></iframe>
+    <div class="product-info">
             <h2 class="product-title">${productTitle}</h2>
             <p class="product-description">${productDescription}</p>
             <p class="product-price" data-current-price="${currentPrice}">Current Price: R${currentPrice}</p> 
+            <p class="highest-bidder"></p>
+            <p class="bidder-contact"></p>
+            <p class="bid-time"></p>
+<br>
             </form>
               <p class="countdown"></p>
               <p class="product-id" style="display: none;">${productID}</p>
@@ -574,28 +595,6 @@ function updateCountdown(expiryDate, countdownElement, productCard) {
     }
   }
 
-function createFile(repo, fileName, content, moo) {
-  const apiUrl = `https://api.github.com/repos/${repo}/contents/${fileName}`;
-
-  return fetch(apiUrl, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `token ${moo}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      message: `Create file ${fileName}`,
-      content: btoa(content)
-    })
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    return response.json();
-  });
-}
-
 function getCurrentTimestamp() {
   const now = new Date();
   const year = now.getFullYear();
@@ -620,12 +619,30 @@ function refreshPrice(productID, moo, repo2, productCard) {
   .then(data => {
     const matchingFiles = data.filter(file => file.name.startsWith(productID));
     let highestBid = 0;
+    let highestBidder = '';
+    let contactDetails = '';
+    let bidTime = '';
 
     matchingFiles.forEach(file => {
       const bidParts = file.name.split('$');
-      const bidAmount = parseFloat(bidParts[1]);
-      if (bidAmount > highestBid) {
-        highestBid = bidAmount;
+      if (bidParts.length > 1) {
+        const bidAmountPart = bidParts[1].split('!')[0];
+        const bidAmount = parseFloat(bidAmountPart);
+        
+        if (bidAmount > highestBid) {
+          highestBid = bidAmount;
+
+
+          const detailsParts = file.name.split('!');
+          if (detailsParts.length > 1) {
+            highestBidder = detailsParts[1].split('[')[0].substring(14);
+            contactDetails = detailsParts[1].split('[')[1].split(']')[0];
+          }
+          bidTime = file.name.split('@')[1].split('$')[0];
+          if (bidTime.length === 14) {
+            bidTime = `${bidTime.substring(0, 4)}/${bidTime.substring(4, 6)}/${bidTime.substring(6, 8)} ${bidTime.substring(8, 10)}:${bidTime.substring(10, 12)}:${bidTime.substring(12, 14)}`;
+          }
+        }
       }
     });
 
@@ -633,6 +650,15 @@ function refreshPrice(productID, moo, repo2, productCard) {
       const priceElement = productCard.querySelector('.product-price');
       priceElement.textContent = `Current Price: R${highestBid}`;
       priceElement.setAttribute('data-current-price', highestBid);
+
+      const highestBidderElement = productCard.querySelector('.highest-bidder');
+      highestBidderElement.textContent = `Highest Bidder: ${highestBidder}`;
+
+      const contactDetailsElement = productCard.querySelector('.bidder-contact');
+      contactDetailsElement.textContent = `Contact no. ${contactDetails}`;
+      
+      const bidTimeElement = productCard.querySelector('.bid-time');
+      bidTimeElement.textContent = `${bidTime}`;
     }
   })
   .catch(error => {
